@@ -108,7 +108,7 @@ In Template Driven forms, most of the logic/code resides in the .HTML/view/templ
 6. Displaying error messages (Display validation errors)
 7. Posting data to server/`express server` (Handle form submission using `ngSubmit`)
 
-3 - Setting up new Angualr project
+3 - Setting up new Angular project
 =====================
 1. First check `angular cli` installed version details on machine by using command at command prompt: `ng -v` or `ng --version`
 
