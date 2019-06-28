@@ -189,7 +189,7 @@ In Template Driven forms, most of the logic/code resides in the .HTML/view/templ
     4. Create a `radio` button group with `<input type="radio">` to show/select Time preference 
     5. Create a `checkbox` with `<input type="checkbox">` to check/opt for promotional offer
 - In `app.component.ts` class file 
-    1. Create a new property `topics` to store array of topics and to display as select drop down menu options
+    1. Create a new property `topics` to store an array of topics and to display as a select drop-down menu options
 
 > **Syntax & Example**: app.component.html
 ```html
@@ -278,5 +278,140 @@ topics = ['JavaScript', 'Angular', 'React', 'Vue'];
   <figure>
     &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/04-01-02-form-drop-down.png" alt="Bootstrap Registration Form with Drop Down Menu *ngFor" title="Bootstrap Registration Form with Drop Down Menu *ngFor" width="1000" border="2" />
     <figcaption>&nbsp;&nbsp;&nbsp; Image - Bootstrap Registration Form with Drop Down Menu *ngFor</figcaption>
+  </figure>
+</p>
+
+Angular Forms - 5 - Binding Data with ngForm
+=====================
+5.1. To start working with Angular Forms we need to follow some other steps:
+---------------------
+> **FormsModule**: To use the template driven form, we need to `explicitly import {FormsModule}` in our application module from `@angular/forms`
+
+> **ngForm**: The `ngForm is an instance of the FormGroup`. The FormGroup represents the group of FormControl from HTML form tag, each form is a FormGroup because it will have at least one FormControl that gives us access to `(ngSubmit)` which can be bind to a method in our component and triggered when we submit the form
+
+> **ngModel**: We need the `ngModel in the form input, and the input must be named too`
+
+> **ngModelGroup**: `ngModelGroup` is useful and helps to create group and sub-groups with in forms like `ngModelGroup="address" -> and its sub childs street, state, postal code etc., ngModelGroup="person" -> and its sub childs name, age, gender, nationality etc.,` and so on
+
+- In `app.module.ts` module class file 
+    - import angular `FormsModule` and also include in `imports array`
+- In file `app.component.html` the main markup file
+    - As and When we use `form tag, angular attaches its inbuilt ngForm` directive to give/pass and manage valuable information of forms
+    - `ngForm` directive denotes values of different fields/form-control and also values are valid or invalid
+
+5.2. Template Reference Variable (TRF)
+---------------------
+- Template Reference Variable (TRF) is used to get the complete reference of the ngForm directive, we can use: `<form #userForm="ngForm">` 
+    - Use interpolation to see/get form-control values entered: `{{ userForm.value | json }}` 
+    - By default angular does not track each and every form-controls,  to track repsective field use `ngModel` directive with respective form field
+    - Error will generate: <strong>*`ERROR Error: If ngModel is used within a form tag, either the name attribute must be set or the form control must be defined as 'standalone' in ngModelOptions`*</strong>
+    - To resolve error we must need to use `name` attribute with every input form-control with `ngModel` : `<input type="text" class="form-control" name="userName" ngModel>`
+        - Check the difference in `userForm.value` object
+        - Enter data in every form field and again verify `userForm.value`
+- We can collect and `send data to the server by using userForm.value` but the better approach is to bind data to `user defined model` and send model data to the server
+
+> **Syntax & Example**: app.module.ts
+```typescript
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+imports: [
+    BrowserModule, 
+    FormsModule
+]
+```
+
+> **Syntax & Example**: app.component.html
+```html
+<div class="container-fluid">
+    <h1>Enrollment Form</h1>
+    <hr />
+
+     <form #userForm="ngForm">
+
+        <span class="lead"><strong>Forms Values : userForm.value :</strong></span> {{ userForm.value | json }} 
+        <hr />
+
+        <!-- name -->
+        <div class="form-group">
+            <label for="">Name</label>
+            <input type="text" class="form-control" name="userName" ngModel>
+        </div>
+
+        <!-- email -->
+        <div class="form-group">
+            <label for="">Email</label>
+            <input type="email" class="form-control" name="email" ngModel>
+        </div>
+
+        <!-- phone -->
+        <div class="form-group">
+            <label for="">Phone</label>
+            <input type="tel" class="form-control" name="phone" ngModel>
+        </div>
+
+        <!-- user can select the topics bind with array -->
+        <div class="form-group">
+            <select class="custom-select" name="topic" ngModel>
+            <option selected>Choose Your Interested Topic</option>
+            <option *ngFor="let topic of topics">{{ topic }}</option>
+            </select>
+        </div>
+
+        <!-- radio button group -->
+        <div class="mb-3">
+            <label for="">Time Preference</label>
+            
+            <div class="form-check">
+            <input type="radio" class="form-check-input" name="timePreference" value="morning" ngModel>
+            <label for="" class="form-check-label">Morning</label>
+            </div>
+
+            <div class="form-check">
+            <input type="radio" class="form-check-input" name="timePreference" value="evening" ngModel> 
+            <label for="" class="form-check-label">Evening</label>
+            </div>
+
+        </div>
+
+        <!-- checkbox -->
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" name="subscribe" ngModel>
+            <label for="" class="form-check-label">Send me promotional offers</label>
+        </div>
+
+        <!-- submit button -->
+        <div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </form>
+
+</div>
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/05-01-01-ngmodel-error.png" alt="Template Driven Form - ngModel error" title="Template Driven Form - ngModel error" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Template Driven Form - ngModel error</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/05-01-02-form-value-object.png" alt="Form Model, FormControl/FormGroup - defualt values" title="Form Model, FormControl/FormGroup - defualt values" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Form Model, FormControl/FormGroup - defualt values</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/05-01-03-form-value-object.png" alt="Form Model, FormControl/FormGroup - updated values" title="Form Model, FormControl/FormGroup - updated values" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Form Model, FormControl/FormGroup - updated values</figcaption>
   </figure>
 </p>
