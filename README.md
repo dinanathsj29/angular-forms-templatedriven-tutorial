@@ -79,7 +79,7 @@ Component Template Markup `(.HTML view - Collects data)` -> Class `(.TS - Binds 
     - Primarily depends on the component class (dynamic)
     - Majority of code written in component .ts class file
     - Reactive forms are more robust, scalable, reusable, and testable
-    
+
 2 - Angular Template Driven Forms (TDFs)
 =====================
 In Template Driven forms, most of the logic/code resides in the .HTML/view/template file. The template is responsible for setting up the form, the validation, control, group etc. 
@@ -114,7 +114,7 @@ In Template Driven forms, most of the logic/code resides in the .HTML/view/templ
 
 <p>
   <figure>
-    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/03-01-01-angular-cli.png" alt="Angular CLI version" title="command: `ng -v` or `ng --version` to check angular cli version" width="70%" border="2" />
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/03-01-01-angular-cli.png" alt="Angular CLI version" title="command: `ng -v` or `ng --version` to check angular cli version" width="1000" border="2" />
     <figcaption>&nbsp;&nbsp;&nbsp; Image - Angular CLI version</figcaption>
   </figure>
 </p>
@@ -128,7 +128,7 @@ In Template Driven forms, most of the logic/code resides in the .HTML/view/templ
 
 <p>
   <figure>
-    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/03-01-02-angular-project-structure.png" alt="Angular project/app folder structure" title="Angular project/app folder structure" width="30%" border="2" />
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/03-01-02-angular-project-structure.png" alt="Angular project/app folder structure" title="Angular project/app folder structure" width="500" border="2" />
     <figcaption>&nbsp;&nbsp;&nbsp; Image - Angular project/app folder structure</figcaption>
   </figure>
 </p>
@@ -143,7 +143,7 @@ In Template Driven forms, most of the logic/code resides in the .HTML/view/templ
 
 <p>
   <figure>
-    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/03-01-03-bootstrap-cdn.png" alt="Bootstrap website - installation options" title="Bootstrap website - installation options" width="70%" border="2" />
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/03-01-03-bootstrap-cdn.png" alt="Bootstrap website - installation options" title="Bootstrap website - installation options" width="1000" border="2" />
     <figcaption>&nbsp;&nbsp;&nbsp; Image - Bootstrap website - installation options</figcaption>
   </figure>
 </p>
@@ -178,3 +178,105 @@ In Template Driven forms, most of the logic/code resides in the .HTML/view/templ
 </html>
 ```
 
+4 - Adding Form Markup-Template HTML
+=====================
+4.1. Create an enrollment form with bootstrap classes: 
+--------------------- 
+- In file `app.component.html` create a enrollment form
+    1. Use bootstrap classes like `form-group`, `form-control`, `form-check` and `form-check-input`, etc. with div and input field respectively to create a form fields with standard look and feel
+    2. Create a name and email `input` fields
+    3. Create a `Drop-Down` menu with `<select>` tag and add/show drop down menu options with `*ngFor` structural directive
+    4. Create a `radio` button group with `<input type="radio">` to show/select Time preference 
+    5. Create a `checkbox` with `<input type="checkbox">` to check/opt for promotional offer
+- In `app.component.ts` class file 
+    1. Create a new property `topics` to store array of topics and to display as select drop down menu options
+
+> **Syntax & Example**: app.component.html
+```html
+<div class="container-fluid">
+    <h1>Enrollment Form</h1>
+    <hr />
+
+    <form>
+
+        <!-- name -->
+        <div class="form-group">
+            <label for="">Name</label>
+            <input type="text" class="form-control">
+        </div>
+
+        <!-- email -->
+        <div class="form-group">
+            <label for="">Email</label>
+            <input type="email" class="form-control">
+        </div>
+
+        <!-- phone -->
+        <div class="form-group">
+            <label for="">Phone</label>
+            <input type="tel" class="form-control">
+        </div>
+
+        <!-- user can select the topics bind with array -->
+        <div class="form-group">
+            <select class="custom-select">
+            <option selected>Choose Your Interested Topic</option>
+            <option *ngFor="let topic of topics">{{ topic }}</option>
+            </select>
+        </div>
+
+        <!-- radio button group -->
+        <div class="mb-3">
+            <label for="">Time Preference</label>
+            
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="timePreference" value="morning">
+                <label for="" class="form-check-label">Morning</label>
+            </div>
+
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="timePreference" value="evening"> 
+                <label for="" class="form-check-label">Evening</label>
+            </div>
+
+        </div>
+
+        <!-- checkbox -->
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input">
+            <label for="" class="form-check-label">Send me promotional offers</label>
+        </div>
+
+        <!-- submit button -->
+        <div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </form>
+
+</div>
+```
+
+> **Syntax & Example**: app.component.ts
+```typescript
+
+/* topics array */
+topics = ['JavaScript', 'Angular', 'React', 'Vue'];
+
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/04-01-01-form.png" alt="Bootstrap Registration Form" title="Bootstrap Registration Form" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Bootstrap Registration Form</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/04-01-02-form-drop-down.png" alt="Bootstrap Registration Form with Drop Down Menu *ngFor" title="Bootstrap Registration Form with Drop Down Menu *ngFor" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Bootstrap Registration Form with Drop Down Menu *ngFor</figcaption>
+  </figure>
+</p>
