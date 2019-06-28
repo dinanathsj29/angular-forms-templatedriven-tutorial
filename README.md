@@ -119,8 +119,8 @@ In Template Driven forms, most of the logic/code resides in the .HTML/view/templ
   </figure>
 </p>
 
-2. If `angular cli` not installed/available on machine (no version or error message displayed) then install it by using the command: `npm install -g @angular/cli@latest`
-3. To `update/upgrade angular cli` to the latest version, use following commands in sequence:
+2. If `angular CLI` not installed/available on machine (no version or error message displayed) then install it by using the command: `npm install -g @angular/cli@latest`
+3. To `update/upgrade angular CLI` to the latest version, use following commands in sequence:
     - command: `npm uninstall -g @angular/cli`
     - command: `npm cache verify or npm cache clean`
     - command: `npm install -g @angular/cli@latest`
@@ -283,23 +283,25 @@ topics = ['JavaScript', 'Angular', 'React', 'Vue'];
 
 Angular Forms - 5 - Binding Data with ngForm
 =====================
-5.1. To start working with Angular Forms we need to follow some other steps:
+5.1. Angular Form - Key concepts:
 ---------------------
-> **FormsModule**: To use the template driven form, we need to `explicitly import {FormsModule}` in our application module from `@angular/forms`
+- **FormsModule**: Angluar template-driven forms are in their own module named `FormsModule`, to use the template driven form, we need to `explicitly import {FormsModule}` in our application module from `@angular/forms`
 
-> **ngForm**: The `ngForm is an instance of the FormGroup`. The FormGroup represents the group of FormControl from HTML form tag, each form is a FormGroup because it will have at least one FormControl that gives us access to `(ngSubmit)` which can be bind to a method in our component and triggered when we submit the form
+- **ngForm**: The `ngForm is an instance of the FormGroup`. The FormGroup represents the group of `FormControl` from HTML form tag, each form is a FormGroup because it will have at least one FormControl that gives us access to `(ngSubmit)` which can be bind to a method in our component and triggered when we submit the form. `The NgForm directive supplements the form element with additional features`. 
 
-> **ngModel**: We need the `ngModel in the form input, and the input must be named too`
+- **ngModel**: We need the `ngModel in the form input, and the input must be named too`. `[(ngModel)]` follows `[(banana in the box)]` syntax and performs `two-way binding` for reading and writing input control values. If a `[(ngModel)]` directive is used, the input field takes an initial value from the bound component class and updates it back whenever any change to the input control value is detected `(on keystroke and button press)`. 
 
-> **ngModelGroup**: `ngModelGroup` is useful and helps to create group and sub-groups with in forms like `ngModelGroup="address" -> and its sub childs street, state, postal code etc., ngModelGroup="person" -> and its sub childs name, age, gender, nationality etc.,` and so on
+- **ngModelGroup**: `ngModelGroup` is useful and helps to create group and sub-groups within forms like `ngModelGroup="address" -> and its sub child's like street, state, postal code, etc., ngModelGroup="person" -> and its sub child's name, age, gender, nationality etc.,` and so on
 
+5.2. To start working with Angular Forms we need to follow some other steps:
+---------------------
 - In `app.module.ts` module class file 
     - import angular `FormsModule` and also include in `imports array`
 - In file `app.component.html` the main markup file
     - As and When we use `form tag, angular attaches its inbuilt ngForm` directive to give/pass and manage valuable information of forms
     - `ngForm` directive denotes values of different fields/form-control and also values are valid or invalid
 
-5.2. Template Reference Variable (TRF)
+5.3. Template Reference Variable (TRF)
 ---------------------
 - Template Reference Variable (TRF) is used to get the complete reference of the ngForm directive, we can use: `<form #userForm="ngForm">` 
     - Use interpolation to see/get form-control values entered: `{{ userForm.value | json }}` 
@@ -413,5 +415,135 @@ imports: [
   <figure>
     &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/05-01-03-form-value-object.png" alt="Form Model, FormControl/FormGroup - updated values" title="Form Model, FormControl/FormGroup - updated values" width="1000" border="2" />
     <figcaption>&nbsp;&nbsp;&nbsp; Image - Form Model, FormControl/FormGroup - updated values</figcaption>
+  </figure>
+</p>
+
+Angular Forms - 6 - Binding Data to a Model
+=====================
+- Here will try to create `user defined model`, as soon as user will enter data will update an instance of user model and send model data to the server
+- Inside the app/project folder/directory generate a new class which acts as a model with the command: `ng generate class User` or `ng g class User` 
+- It will generate a new file named: `user.ts`, type in the different `properties` of user class like `name, email, phone - as per fields used in the form`
+- User model is ready with us now create an instance of model in `app.component.ts` with new property named `userModel` which consists of user default details/information: `userModel = new User('Dinanath', 'dinanathj@gmail.com', 9892221165, 'default', 'morning', true);`
+- Custom userModel instance with data is ready in the class file now its time to `bind userModel with enrollment form using interpolation {{ userModel | JSON }}`
+- To bind the userModel properties with form field use property binding denotes by a square bracket to the ngModel directive and userModel properties `[(ngModel)]="userModel.name"` and so on...
+- `Property data binding by square bracket only is one-way data binding [(ngModel]` -> data flow from class to the view but not flows from view to the class
+- So to implement/achieve two-way `data binding use banana in the box ie [(ngModel)]`, two-way data binding sync model and view
+
+> **Syntax & Example**: user.ts
+```typescript
+export class User {
+  constructor(
+    public name: string,
+    public email: string,
+    public phone: number,
+    public topic: string,
+    public timePreference: string,
+    public subscribe: boolean
+  ){}
+}
+```
+
+> **Syntax & Example**: app.component.ts
+```typescript
+import { User } from './user';
+
+userModel = new User('Dinanath', 'dinanathj@gmail.com', 9892221165, 'default', 'morning', true);
+```
+
+> **Syntax & Example**: app.component.html
+```html
+<div class="container-fluid">
+  <h1>Enrollment Form</h1>
+  <hr />
+
+  <form>
+
+    <span class="lead"><strong>Forms Values : userForm.value :</strong></span> {{ userForm.value | json }} 
+    <hr />
+
+    <span class="lead"><strong>Forms Values : userModel data :</strong></span> {{ userModel | json }}
+    <hr />
+
+    <!-- name -->
+    <div class="form-group">
+      <label for="">Name</label>
+      <!-- two way data binding used to update view and class both -->
+      <input type="text" class="form-control" name="userName" [(ngModel)]="userModel.name">
+    </div>
+
+    <!-- email -->
+    <div class="form-group">
+      <label for="">Email</label>
+      <input type="email" class="form-control" name="email" [(ngModel)]="userModel.email">
+    </div>
+
+    <!-- phone -->
+    <div class="form-group">
+      <label for="">Phone</label>
+      <input type="tel" class="form-control" name="phone" [(ngModel)]="userModel.phone">
+    </div>
+
+    <!-- user can select the topics bind with array -->
+    <div class="form-group">
+      <select class="custom-select" name="topic" [(ngModel)]="userModel.topic">
+      <option value="default">Choose Your Interested Topic</option>
+      <option *ngFor="let topic of topics">{{ topic }}</option>
+      </select>
+    </div>
+
+    <!-- radio button group -->
+    <div class="mb-3">
+      <label for="">Time Preference</label>
+      
+      <div class="form-check">
+      <input type="radio" class="form-check-input" name="timePreference" value="morning" [(ngModel)]="userModel.timePreference">
+      <label for="" class="form-check-label">Morning</label>
+      </div>
+
+      <div class="form-check">
+      <input type="radio" class="form-check-input" name="timePreference" value="evening" [(ngModel)]="userModel.timePreference">
+      <label for="" class="form-check-label">Evening</label>
+      </div>
+
+    </div>
+
+    <!-- checkbox -->
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" name="subscribe" [(ngModel)]=userModel.subscribe>
+        <label for="" class="form-check-label">Send me promotional offers</label>
+    </div>
+
+    <!-- submit button -->
+    <div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+  </form>
+
+</div>
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/06-01-01-class-user.png" alt="User Class - works as Data Model" title="User Class - works as Data Model" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - User Class - works as Data Model</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/06-01-02-formvalue-modelvalue.png" alt="User Class - formvalue, modelvalue" title="User Class - formvalue, modelvalue" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - User Class - formvalue, modelvalue</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/06-01-03-two-way-data-binding.png" alt="User Class, form model, Two Way Data Binding" title="User Class, form model, Two Way Data Binding" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - User Class, form model, Two Way Data Binding</figcaption>
   </figure>
 </p>
