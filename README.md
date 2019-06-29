@@ -281,7 +281,7 @@ topics = ['JavaScript', 'Angular', 'React', 'Vue'];
   </figure>
 </p>
 
-Angular Forms - 5 - Binding Data with ngForm
+5 - Binding Data with ngForm
 =====================
 5.1. Angular Form - Key concepts:
 ---------------------
@@ -308,7 +308,7 @@ Angular Forms - 5 - Binding Data with ngForm
     - By default angular does not track each and every form-controls,  to track repsective field use `ngModel` directive with respective form field
     - Error will generate: <strong>*`ERROR Error: If ngModel is used within a form tag, either the name attribute must be set or the form control must be defined as 'standalone' in ngModelOptions`*</strong>
     - To resolve error we must need to use `name` attribute with every input form-control with `ngModel` : `<input type="text" class="form-control" name="userName" ngModel>`
-        - Check the difference in `userForm.value` object
+        - Check the difference in `user form.value` object
         - Enter data in every form field and again verify `userForm.value`
 - We can collect and `send data to the server by using userForm.value` but the better approach is to bind data to `user defined model` and send model data to the server
 
@@ -418,7 +418,7 @@ imports: [
   </figure>
 </p>
 
-Angular Forms - 6 - Binding Data to a Model
+6 - Binding Data to a Model
 =====================
 - Here will try to create `user defined model`, as soon as user will enter data will update an instance of user model and send model data to the server
 - Inside the app/project folder/directory generate a new class which acts as a model with the command: `ng generate class User` or `ng g class User` 
@@ -548,7 +548,7 @@ userModel = new User('Dinanath', 'dinanathj@gmail.com', 9892221165, 'default', '
   </figure>
 </p>
 
-Angular Forms - 7 - Tracking state and validity
+7 - Tracking state and validity
 =====================
 - As Validations are an important aspect of programming, before sending data to the server it's pretty important to `validate the form data and show user respective visual feedback or error message`
 - Using `ngModel` in a form gives you more than just two-way data binding:
@@ -649,7 +649,7 @@ Angular automatically attach classes like `ng-invalid, ng-dirty, ng-touched` to 
   </figure>
 </p>
 
-Angular Forms - 8- Validation with Visual Feedback
+8- Validation with Visual Feedback
 =====================
 - A good user experience is to visually indicate to the user `form field is valid/invalid` while feeling up the form/entering the details
 - Usually one can use attributes/properties like `Required, Maxlength, Minlength and Pattern` for form validation on form input fields 
@@ -698,5 +698,433 @@ Angular Forms - 8- Validation with Visual Feedback
   <figure>
     &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/08-01-02-form-properties-class-red-border.png" alt="Form field - show Red border" title="Form field - show Red border" width="1000" border="2" />
     <figcaption>&nbsp;&nbsp;&nbsp; Image - Form field - show Red border</figcaption>
+  </figure>
+</p>
+
+9 - Displaying Error Messages
+=====================
+- Its essential/advisable to show user visual red border with appropriate Error Messages/feedback
+
+> **Note**: Bootstrap class `'d-none'` is used to `hide/display:none` for any element. We can use either `'*ngIf'` or `'class binding'` or both to display error messages.
+
+9.1. Showing single error with a class binding:
+---------------------
+> **Syntax & Example**: app.component.html
+```html
+<!-- name -->
+<div class="form-group">
+    <label for="">Name</label>
+    <!-- two way data binding used to update view and class both -->
+    <input type="text" #name="ngModel" required [class.is-invalid]="name.invalid && name.touched" class="form-control" name="userName" [(ngModel)]="userModel.name" placeholder="Name required*">
+
+    <!-- single error with a class binding -->
+    <small class="text-danger" [class.d-none]="name.valid || name.untouched">* Name is required</small>
+</div>
+
+<!-- phone -->
+<div class="form-group">
+    <label for="">Phone</label>
+    <input type="tel" #phone="ngModel" required pattern="^\d{10}$" [class.is-invalid]="phone.invalid && phone.touched"class="form-control" name="phone" [(ngModel)]="userModel.phone" placeholder="10 digits mobile number">
+
+    <!-- single error with a class binding -->
+    <small class="text-danger" [class.d-none]="phone.valid || phone.untouched">Enter 10 digits mobile number</small>
+</div>
+```
+
+9.2. Showing group or multiple error messages: error property:
+---------------------
+- Some times we come across a scenario where we need to apply multiple validations and also we need to show a different error message 
+
+> **Syntax & Example**: app.component.html
+```html
+<!-- phone -->
+<div class="form-group">
+    <label for="">Phone</label>
+    <input type="tel" #phone="ngModel" required pattern="^\d{10}$" [class.is-invalid]="phone.invalid && phone.touched"class="form-control" name="phone" [(ngModel)]="userModel.phone" placeholder="10 digits mobile number">
+
+    <!-- single error with a class binding -->
+    <!-- <small class="text-danger" [class.d-none]="phone.valid || phone.untouched">Enter 10 digits mobile number</small> -->
+
+    <!-- group or multiple error messages : error property -->
+    <div *ngIf="phone.errors && (phone.invalid || phone.touched)">
+        <small class="text-danger" *ngIf="phone.errors.required">* Phone is required</small>
+        <small class="text-danger" *ngIf="phone.errors.pattern">* Phone number must be 10 digits</small>
+    </div>
+</div>
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/09-01-01-form-properties-class-error-message.png" alt="Class binding error messages" title="Class binding error messages" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Class binding error messages</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/09-01-02-form-error-property-multiple.png" alt="Error property showing multiple/different errors" title="Error property showing multiple/different errors" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Error property showing multiple/different errors</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/09-01-03-form-error-property-multiple.png" alt="Error property showing multiple/different errors" title="Error property showing multiple/different errors" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Error property showing multiple/different errors</figcaption>
+  </figure>
+</p>
+
+10 - Select control validation
+=====================
+#### `Select option drop down menu` validation with required and showing error message: we need to listen/check `'Blur'/'Change'` event and verify option selected and accordingly set validation/show error messages:
+
+> **Syntax & Example**: app.component.html
+```html
+<!-- user can select the topics bind with array -->
+<div class="form-group">
+    <select (blur)="validateChoosenTopic(topic.value)" (change)="validateChoosenTopic(topic.value)" #topic="ngModel" [class.is-invalid]="topicHasError && topic.touched" class="custom-select" name="topic" [(ngModel)]="userModel.topic">
+        <option value="default">Choose Your Interested Topic</option>
+        <option *ngFor="let topic of topics">{{ topic }}</option>
+    </select>
+
+    <small class="text-danger" [class.d-none]="!topicHasError ||topic.untouched">Please choose right topic</small>
+</div>
+```
+
+> **Syntax & Example**: app.component.ts
+```typescript
+// class member to hold select option error state
+topicHasError = true;
+
+// select option validation
+validateChoosenTopic(curValue) {
+if (curValue === 'default') {
+        this.topicHasError = true;
+    } else {
+        this.topicHasError = false;
+    }
+}
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/10-01-01-form-select-option-validation.png" alt="Topic Select Dropdown validation" title="Topic Select Dropdown validation" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Topic Select Dropdown validation</figcaption>
+  </figure>
+</p>
+
+11 - Form level validation
+=====================
+- Whenever we add the `<form>` tag/element in to the html page, angular automatically attaches the `'ngForm'` directive to the form tag
+- We can get the reference of the `'ngForm'` directive by using `#Template Reference Variable (#TRV)`, example: `<form #userForm="ngForm">`
+- Form validation properties can be used for global level operations like `enable/disable of 'SUBMIT'` button etc.
+- Use interpolation to see/get form-validation status: `{{ userForm.form.valid }} ` 
+
+> **Syntax & Example**: app.component.html
+```html
+<form #userForm="ngForm">
+
+  <span class="lead"><strong>Form Validation status : userForm.form.valid :</strong></span> {{ userForm.form.valid }} 
+
+  <!-- submit button -->
+  <div>
+    <!-- form level validation to enable/disable button -->
+    <button [disabled]="userForm.form.invalid || topicHasError" type="submit" class="btn btn-primary">Submit</button>
+  </div>
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/11-01-01-form-userform-valid.png" alt="userForm.form.valid status - Success" title="userForm.form.valid status - Success" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - userForm.form.valid status - Success</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/11-01-02-form-userform-invalid.png" alt="userForm.form.valid status - false/invalid" title="userForm.form.valid status - false/invalid" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - userForm.form.valid status - false/invalid</figcaption>
+  </figure>
+</p>
+
+12 - Submitting form data
+=====================
+1. Use `'novalidate'` attribute to form tag to avoid/prevent browser `default validations` when will click on 'SUBMIT' button
+    - ```<form #userForm="ngForm" novalidate>```
+2. Bind `'ngSubmit'` event to the form tag which will trigger on 'SUBMIT' button
+    - ```<form #userForm="ngForm" novalidate (ngSubmit)="onSubmit()">```
+3. Define `onSubmit()` event handler in `app.component.ts` class file
+
+> **Syntax & Example**: app.component.html
+```html
+<form #userForm="ngForm" novalidate (ngSubmit)="onSubmit()">
+```
+
+> **Syntax & Example**: app.component.ts
+```typescript
+// handler for submit button
+onSubmit() {
+    console.log('submit button clicked');
+    console.log(this.userModel);
+}
+```
+
+4. To send data to the server we need to create/use `'enrolment service'` with angular CLI by using the command: `ng generate service enrollment` or `ng g s enrollment`  
+    - `enrollment.service.ts:`
+        - Import HttpClient module: import { HttpClient } from '@angular/common/http';
+        - Invoke HttpClient in constructor as a local variable / Dependency injection:  <br/>
+        constructor(public _httpClient:HttpClient) { }
+5. `app.module.ts: `
+    - import HttpClientModule: import { HttpClientModule } from '@angular/common/http'; 
+    - add to the imports array: <br/>
+    imports: [
+        BrowserModule, 
+        FormsModule,
+        HttpClientModule
+    ], 
+6. `enrollment.service.ts:` 
+    - // create a variable which hold path to which will post the date <br/>
+     _url = 'http://localhost:3000/enroll';
+    - // create a method called enroll which will post the data to server <br/>
+    enroll(user:User){
+        return this._httpClient.post`<any>`(this._url,user);
+    }
+7. `app.component.ts: `
+    - The Post request will return response as an `observable`, so we need to subscribe to observables in app.component.ts
+    - Import enrollment service: import { EnrollmentService } from './enrollment.service';
+    - Invoke in constructor as a local variable / Dependency injection: <br/> 
+    constructor(public enrollmentService:EnrollmentService) { }
+    - On submit button clicked i.e. in onSubmit() method subscribe to the observables: <br/> 
+
+> **Syntax & Example**: app.module.ts
+```typescript
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule, 
+    FormsModule,
+    HttpClientModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+> **Syntax & Example**: enrollment.service.ts
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { User } from './user';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class EnrollmentService {
+  // create a variable which holds the path to which will post the date
+  _url = 'http://localhost:3000/enroll';
+
+  constructor(public _httpClient: HttpClient) { }
+
+  // create a method called enroll which will post the data to the server
+  enroll(user: User) {
+    return this._httpClient.post<any>(this._url, user)
+  }
+}
+```
+
+> **Syntax & Example**: app.component.ts
+```typescript
+// handler for submit button
+onSubmit() {
+    console.log('submit button clicked');
+    console.log(this.userModel);
+    this.enrollmentService.enroll(this.userModel)
+      .subscribe(
+        data => console.log('Success!', data),
+        error => console.error('Error!', error)
+      )
+  }
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/12-01-01-form-submit-usermodel.png" alt="Submit - Check userModel value" title="Submit - Check userModel value" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Submit - Check userModel value</figcaption>
+  </figure>
+</p>
+
+13 - Create Express Server to Receive Form Data
+=====================
+1. At the root, besides the angular application folder create a new siblings folder named `'server'` which consists of server-side code
+2. Run the command: `npm init --yes` to create a `package.json` also bypass-surpass the questions with default answers (without giving answers to questions)
+3. Install express and other dependencies with the command: <br/>
+    `npm install --save express body-parser cors` <br/>
+    - **express**: node web server
+    - **body-parse**r: middleware to read/send/pass form data (to handle form data)
+    - **cors**: cross origin port/domain request (helps to make request through multiple ports/servers - cross origin resource sharing)
+
+> **Syntax & Example**: package.json
+```json
+"dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3"
+}
+```
+4. Inside a `server` folder create a new file named `'server.js'` and required logic
+5. At command prompt/terminal run command: `node server` - will get output in terminal as 'Server running on localhost port:  3000'
+6. in browser type path: `'http://localhost:3000/'` - output - 'Hello from server!'
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/13-01-01-form-node-server.png" alt="Node Server Running" title="Node Server Running" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Node Server Running</figcaption>
+  </figure>
+</p>
+
+7. add endpoint in server.js to which angular application will post data
+// add endpoint
+app.post('/enroll', function(req,res){
+    // req.body - contains user data send by the angular
+    console.log(req.body);
+    // send response
+    res.status(200).send({'message': 'Data received'});
+})
+8. insert/add endpoint path to angular url variable in 'enrollment.service.ts'
+    _url = 'http://localhost:3000/enroll';
+9. restart the node server by command: `node server`
+10. In angular application click on the submit button and check `inspect element` console as well as node console will get the message and user data as an output. for better usability its advisable to hide actual form/hide submit button / disable submit button etc. to avoid the extra click on submit button.
+
+> **Syntax & Example**: server.ts
+```typescript
+// 1. imports/requires the packages
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
+// port
+const PORT = 3000;
+
+const app = express();
+
+// handle the json data
+app.use(bodyParser.json());
+
+app.use(cors());
+
+// test/check get request
+app.get('/',function(req, res){
+    res.send('Hello from server!');
+})
+
+// add endpoint
+app.post('/enroll', function(req,res){
+    // req.body - contains user data send by the angular
+    console.log(req.body);
+    // send response
+    res.status(200).send({'message': 'Data received'});
+
+    // to see errors 
+    // res.status(401).send({'message': 'Data received'});
+})
+
+// listen to request
+app.listen(PORT, function(){
+    console.log('Server running on localhost port: ', PORT);
+})
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/13-01-02-form-console-server-response.png" alt="Template Driven Form - Submit Form data" title="Template Driven Form - Submit Form data" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Template Driven Form - Submit Form data</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/13-01-03-form-node-response.png" alt="Template Driven Form - Submit Form data with Node Server Response" title="Template Driven Form - Submit Form data with Node Server Response" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Template Driven Form - Submit Form data with Node Server Response</figcaption>
+  </figure>
+</p>
+
+14 - Error Handling
+=====================
+1. To catch error we need support of `'rxjs'` operators
+
+> **Syntax & Example**: enrollment.service.ts
+```typescript
+// to catch error
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
+// create a method called enroll which will post the data to the server
+enroll(user:User){
+    return this.httpClient.post`<any>`(this._url,user)
+      .pipe(catchError(this.errorHandler)) //catch errors
+}
+
+errorHandler(error: HttpErrorResponse) {
+  return throwError(error);
+}
+```
+2. By defualt we log error to console its advisable to create a new data member/property named 'errorMessage' and bind to the view.
+> **Syntax & Example**: app.component.ts:
+```typescript
+// store error in data member / property to bind to the view
+error => this.errorMessage = error.statusText
+```
+3. > **Syntax & Example**: app.component.html
+```html
+<!--  errorMessage bind to the view -->
+<div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+</div>
+```
+4. in server.js change:
+res.status(200) to res.status(401).send({'message': 'Data received'});
+5. restart node server, load angular application application, click on submit and check
+
+15 - TDF and Reactive (Model Driven) Approach
+=====================
+- `'ngForm'` directive gives us entire information (different properties/methods/objects/values used with form/form fields)
+- To examine/understand just pass current form ie. `#userForm` parameter in submit button event handler function and check in `inspect element/developer tools` -> console panel:
+- `NgForm` object -> form: `FormGroup` -> `controls` -> each and every form field is of type FormControl
+- `FormGroup` and `FormControl` are building blocks of reactive forms
+- Template Driven Form approach is behind the scene works as Model Driven approach where models are automatically created by angular
+
+> **Syntax & Example**: app.component.html:
+```html
+<form #userForm="ngForm" novalidate (ngSubmit)="onSubmit(userForm)">
+```
+
+> **Syntax & Example**: app.component.ts:
+```ts
+onSubmit(curForm) {
+    console.log('current User Form reactive details: ', curForm);
+}
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/15-01-01-tdf-vs-mdf-rf.png" alt="Template Driven Form vs Module Driven/Reactive Form" title="Template Driven Form vs Module Driven/Reactive Form" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Template Driven Form vs Module Driven/Reactive Form</figcaption>
   </figure>
 </p>
