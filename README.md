@@ -547,3 +547,156 @@ userModel = new User('Dinanath', 'dinanathj@gmail.com', 9892221165, 'default', '
     <figcaption>&nbsp;&nbsp;&nbsp; Image - User Class, form model, Two Way Data Binding</figcaption>
   </figure>
 </p>
+
+Angular Forms - 7 - Tracking state and validity
+=====================
+- As Validations are an important aspect of programming, before sending data to the server it's pretty important to `validate the form data and show user respective visual feedback or error message`
+- Using `ngModel` in a form gives you more than just two-way data binding:
+    - It also tells you if the user touched the control (state & activity), 
+    - If the value changed, or 
+    - If the value became valid/invalid (validity)
+- The `NgModel` directive doesn't just track state:
+    - It updates the control with special `Angular CSS classes that reflect the state`,
+    - We can leverage/utilize those class names to change the appearance of the control
+
+7.1. Angular classes used to track control state and validity:
+---------------------
+Angular automatically attach classes like `ng-invalid, ng-dirty, ng-touched` to input fields
+
+| STATE                                         | CLASS applied <br/> (if TRUE)   |  CLASS applied <br/> (if FALSE)     |
+| ----------------------------------------------|-------------------|-----------------------|
+| The control has been visited/clicked/touched  <br/> (`class will apply/change only on blur event`, user need to navigate away from form control)        | ng-touched        | ng-untouched          |
+| The controls value has been changed  <br/> (class will apply when user type something)                                                                    | ng-dirty          | ng-pristine           |
+| The controls value is valid                   | ng-valid          | ng-invalid            |
+
+- Add a `#Template Reference Variable (#TRV)` named `#name` to the `Name <input> field` and use it to display the input's CSS classes
+    - Use interpolation to see/get form-control classes: `{{ name.className }}` 
+    - Right click on element and check in browser `inspect element` panel the respective angular state classes applied
+
+> **Syntax & Example**: app.component.html (to apply state and class)
+```html
+<!-- name -->
+<div class="form-group">
+    <label for="">Name</label>
+    <!-- two way data binding used to update view and class both -->
+    <input type="text" #name required class="form-control" name="userName" [(ngModel)]="userModel.name">
+</div>
+
+<span class="text-primary"><strong>Angular Classes : name.className :</strong></span> {{ name.className }}
+```
+
+7.2. Angular classes and properties used to track control state and validity:
+---------------------
+- With each of the `state classes` angular also provide an alternative associated `state properties` on the ngModel directive
+    - properties names are the same as the class name, only `ng-` removed from it
+
+| CLASS                                     | PROPERTY                                  |
+| ------------------------------------------|-------------------------------------------|
+| .ng-untouched                              | untouched                                 |
+| .ng-touched                                | touched                                   |
+| .ng-pristine                               | pristine                                  |
+| .ng-dirty                                  | dirty                                     |
+| .ng-valid                                  | valid                                     |
+| .ng-invalid                                | invalid                                   |
+
+- `#name` reference variable by default point to input element/field of DOM, by assigning `#name="ngModel"` will `point to ngModel` so all ngModel properties will be available to us
+    - Use interpolation to see/get form-control properties: `{{ name.touched }} {{ name.pristine }} {{ name.valid }}` 
+    - Right click on element and check in browser `inspect element` panel the respective angular state classes applied with respective properties
+
+> **Syntax & Example**: app.component.html (to apply state and properties)
+```html
+<!-- name -->
+<div class="form-group">
+    <label for="">Name</label>
+    <!-- two way data binding used to update view and class both -->
+    <input type="text" #name="ngModel" required class="form-control" name="userName" [(ngModel)]="userModel.name">
+</div>
+
+<span class="text-success"><strong>Angular ngModel properties used for input fields:</strong> touched - {{ name.touched }} <span class="text-warning">|</span> pristine - {{ name.pristine }} <span class="text-warning">|</span> valid - {{ name.valid }}</span>
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/07-01-01-form-state-class-default.png" alt="Form - State class - default" title="Form - State class - default" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Form - State class - default</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/07-01-02-form-state-class-changed.png" alt="Form - State class - changed/upated/modified" title="Form - State class - changed/upated/modified" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Form - State class - changed/upated/modified</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/07-01-03-form-state-properties-default.png" alt="Form - State Properties - default" title="Form - State Properties - default" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Form - State Properties - default</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/07-01-04-form-state-properties-changed.png" alt="Form - State Properties - changed/upated/modified" title="Form - State Properties - changed/upated/modified" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Form - State Properties - changed/upated/modified</figcaption>
+  </figure>
+</p>
+
+Angular Forms - 8- Validation with Visual Feedback
+=====================
+- A good user experience is to visually indicate to the user `form field is valid/invalid` while feeling up the form/entering the details
+- Usually one can use attributes/properties like `Required, Maxlength, Minlength and Pattern` for form validation on form input fields 
+- We can use Angular inbuilt validation classes or can create a custom css class and use for indication
+
+> **Note**: bootstrap uses a class `'is-invalid'` to show a red border around input fields
+
+> **Syntax & Example**: styles.css
+```css
+/* create custom css class for indicating invalid visual border */
+.form-control.ng-invalid.ng-touched {
+  border: 1px solid coral;
+  box-shadow: 1px 1px 5px 1px coral;
+}
+```
+
+- Check if the name is `invalid` and also `touched` (something entered and removed) then only apply a bootstrap/custom class named `'is-invalid'` but don't apply initially without touch:
+- Apply pattern matching validation input only `10 digits mobile number - pattern="^\d{10}$" `
+
+> **Syntax & Example**: app.component.html (apply validation class to show red border)
+```html
+ <!-- name -->
+<div class="form-group">
+    <label for="">Name</label>
+    <!-- two way data binding used to update view and class both -->
+    <input type="text" #name="ngModel" required [class.is-invalid]="name.invalid && name.touched" class="form-control" name="userName" [(ngModel)]="userModel.name" placeholder="Name required*">
+</div>
+
+<!-- phone -->
+<div class="form-group">
+    <label for="">Phone</label>
+    <input type="tel" #phone="ngModel" required pattern="^\d{10}$" [class.is-invalid]="phone.invalid && phone.touched"class="form-control" name="phone" [(ngModel)]="userModel.phone" placeholder="10 digits mobile number">
+</div>
+```
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/08-01-01-form-properties-class-default.png" alt="Form Default properties/class" title="Form Default properties/class" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Form Default properties/class</figcaption>
+  </figure>
+</p>
+
+<hr/>
+
+<p>
+  <figure>
+    &nbsp;&nbsp;&nbsp; <img src="./_images-angular-forms-templatedriven/08-01-02-form-properties-class-red-border.png" alt="Form field - show Red border" title="Form field - show Red border" width="1000" border="2" />
+    <figcaption>&nbsp;&nbsp;&nbsp; Image - Form field - show Red border</figcaption>
+  </figure>
+</p>
