@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* create custom css class for indicating invalid visual border 
+.form-control.ng-invalid.ng-touched {
+  border: 1px solid coral;
+  box-shadow: 1px 1px 5px 1px coral;
+}
+*/
